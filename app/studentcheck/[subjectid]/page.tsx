@@ -113,7 +113,7 @@ export default function Studentcheck() {
                             else {
                                 sethandlehistory([...res6.data]);
                             }
-
+                            
                             setiscansave(!(moment().format("DD-MM-YYYY") === res6.data[res6.data.length - 1].date))
                         }
                     }
@@ -180,8 +180,14 @@ export default function Studentcheck() {
 
     //!update history
 
-    const updateHistory = (value:string,indexofdate:number,indexofrecord:number) => {
-        //console.log(value,indexofdate,indexofrecord);
+    const updateHistory = async (value:string,id:number) => {
+        const update = await axios.patch(url + "/subject/updatehistory/" + id,{checkid:value});
+        if (update.status === 200) {
+            const gethistory = await axios.get(`${url}/subject/gethistory/${handlelavel.id}/${param.subjectid}`);
+            if (gethistory.status === 200) {
+                sethandlehistory([...gethistory.data]);
+            }
+        }
     }
 
     //!
@@ -208,8 +214,8 @@ export default function Studentcheck() {
                 :
                 ""
             }
-            <div className="mt-[20px] grid grid-cols-2 pt-[50px]">
-                <div>
+            <div className="mt-[20px] grid grid-cols-2 pt-[25px]">
+                <div className="pt-[25px]">
                     <div className="grid grid-cols-4 text-center">
                         <p>ลำดับ</p>
                         <p>รหัสนักเรียน</p>
@@ -227,14 +233,15 @@ export default function Studentcheck() {
                         ))}
                     </div>
                 </div>
-                <div className="flex">
+                <div className="flex overflow-x-scroll pt-[25px]">
                     {handlehistory.map((e:any,i:number) => (
-                        <div key={i} className="w-[100px] text-center ml-[10px] border border-gray-700">
+                        <div key={i} className="w-[100px] text-center ml-[10px] border border-gray-700 relative">
+                            <p className="absolute top-[-25px] left-[50%] translate-x-[-50%] text-[15px]">{e.checkamount}/{e.records.length}</p>
                             <div>
                                 <p>{e.date}</p>
                                 {e.records.map((g:any,j:number) => (
                                     <div key={j} className="mt-[10px] border border-gray-700">
-                                        <select onChange={(e) => updateHistory(e.target.value,i,j)} value={g.checkstatusid} className={`${g.checkstatusid === 1 ? "bg-green-600": g.checkstatusid === 2 ? "bg-red-600":g.checkstatusid === 3 ? "bg-yellow-600":g.checkstatusid === 4 ? "bg-blue-600":"bg-[#000]"} focus:outline-none text-center bg-[#000]`}> 
+                                        <select onChange={(value) => updateHistory(value.target.value,g.id)} value={g.checkstatusid} className={`${g.checkstatusid === 1 ? "bg-green-600": g.checkstatusid === 2 ? "bg-red-600":g.checkstatusid === 3 ? "bg-yellow-600":g.checkstatusid === 4 ? "bg-blue-600":"bg-[#000]"} focus:outline-none text-center bg-[#000]`}> 
                                             {handlecheckstatus.map((h,k) => (
                                                 <option key={k} value={h.id}>{h.statusname}</option>
                                             ))}

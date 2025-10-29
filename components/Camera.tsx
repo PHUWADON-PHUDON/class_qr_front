@@ -38,7 +38,7 @@ export default function Camera({studentcheck,setstudentcheck,checksuccess,setche
     //!
 
     return(
-        <div className="fixed mt-[10px] h-[calc(100dvh_-_50px)] w-full bg-black/80 flex gap-[20px]">
+        <div className="fixed mt-[10px] h-[calc(100dvh_-_50px)] w-full bg-black/80 flex gap-[20px] z-[100]">
             <video ref={ref} autoPlay className="w-[600px] h-[455px] border-2 border-gray-400 rounded-lg shadow-md"/>
             <div className="overflow-y-scroll w-[400px] grow-1">
                 {checksuccess.map((e:any,i:number) => (

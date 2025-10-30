@@ -210,7 +210,7 @@ export default function Studentcheck() {
                 </div>
             </div>
             {isopencamera ? 
-                <Camera studentcheck={studentcheck} setstudentcheck={setstudentcheck} checksuccess={checksuccess} setchecksuccess={setchecksuccess} />
+                <Camera studentcheck={studentcheck} setstudentcheck={setstudentcheck} checksuccess={checksuccess} setchecksuccess={setchecksuccess} setissave={setissave} />
                 :
                 ""
             }

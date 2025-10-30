@@ -1,7 +1,7 @@
 "use client";
 import { useZxing } from "react-zxing";
 
-export default function Camera({studentcheck,setstudentcheck,checksuccess,setchecksuccess}:any) {
+export default function Camera({studentcheck,setstudentcheck,checksuccess,setchecksuccess,setissave}:any) {
 
     //!handle camera
 
@@ -12,6 +12,8 @@ export default function Camera({studentcheck,setstudentcheck,checksuccess,setche
                 if (e.student_id === result.getText()) {
                     e.checkid = 1;
                     success = e;
+
+                    setissave(true);
 
                     return(e);
                 }

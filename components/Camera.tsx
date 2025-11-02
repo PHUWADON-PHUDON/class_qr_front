@@ -1,11 +1,25 @@
 "use client";
+import { useState,useEffect } from "react";
 import { useZxing } from "react-zxing";
 
 export default function Camera({studentcheck,setstudentcheck,checksuccess,setchecksuccess,setissave}:any) {
+    const [device,setuseState] = useState<string>("");
+
+    useEffect(() => {
+        (async () => {
+          const allDevices = await navigator.mediaDevices.enumerateDevices();
+          const videoDevices = allDevices.filter(d => d.kind === "videoinput");
+        
+          if (videoDevices.length > 0) {
+            setuseState(videoDevices[2].deviceId);
+          }
+        })();
+    },[]);
 
     //!handle camera
 
     const { ref } = useZxing({
+        deviceId: device,
         onDecodeResult(result) {
             let success:any = {};
             const findstudent = studentcheck.map((e:any) => {
@@ -23,18 +37,24 @@ export default function Camera({studentcheck,setstudentcheck,checksuccess,setche
             });
 
             const isrepeat = checksuccess.some((e:any) => e.studentid === success.studentid);
-
-            if (checksuccess.length > 0) {
-                if (!isrepeat) {
-                    setchecksuccess([success,...checksuccess]);
+            
+            if (Object.keys(success).length) {
+                if (checksuccess.length > 0) {
+                    if (!isrepeat) {
+                        setchecksuccess([success,...checksuccess]);
+                        const audio = new Audio('/beep.wav');
+                        audio.play();
+                    }
                 }
-            }
-            else if (checksuccess.length === 0) {
-                setchecksuccess([success,...checksuccess]);
+                else if (checksuccess.length === 0) {
+                    setchecksuccess([success,...checksuccess]);
+                    const audio = new Audio('/beep.wav');
+                    audio.play();
+                }
             }
 
             setstudentcheck((prev:any) => [...findstudent]);
-        },
+        }
     });
 
     //!

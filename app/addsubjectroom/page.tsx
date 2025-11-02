@@ -64,6 +64,18 @@ export default function Addsubjectroom() {
 
     //!
 
+    //!delete subject
+
+    const deleteSubject = async (id:number,subjectname:string,level:string) => {
+        const isconfirm = confirm(`ต้องการลบวิชา ${subjectname} ชั้น ม.${level} ใช่หรือไม่`);
+        if (isconfirm) {
+            const res = await axios.delete(url + "/subject/deletesubject/" + id);
+            window.location.reload();
+        }
+    }
+
+    //!
+
     return(
         <div>
             <div className="flex items-center gap-[10px] text-[20px]">
@@ -82,10 +94,13 @@ export default function Addsubjectroom() {
             </div>
             <div className="mt-[30px] flex gap-[20px] flex-wrap">
                 {handlesubject.map((e,i) => (
-                    <Link href={`/addsubjectroom/studentsubject/${e.id}`} key={i} className="bg-white w-[200px] rounded-2xl text-[#000] cursor-pointer">
-                        <p className="text-center text-[20px]">{e.subjectname}</p>
-                        <p className="text-center text-[20px]">ม.{e.lavel.lavel}/{e.lavel.sublavel}</p>
-                    </Link>
+                    <div key={i} className="relative bg-white rounded-2xl w-[200px]">
+                        <Link href={`/addsubjectroom/studentsubject/${e.id}`} key={i} className="text-[#000] cursor-pointer">
+                            <p className="text-center text-[20px]">{e.subjectname}</p>
+                            <p className="text-center text-[20px]">ม.{e.lavel.lavel}/{e.lavel.sublavel}</p>
+                        </Link>
+                        <div onClick={() => deleteSubject(e.id,e.subjectname,`${e.lavel.lavel}/${e.lavel.sublavel}`)} className="absolute right-[-10px] top-[-10px] bg-[red] flex justify-center items-center text-[#fff] w-[25px] h-[25px] rounded-[100%] cursor-pointer">ลบ</div>
+                    </div>
                 ))}
             </div>
         </div>

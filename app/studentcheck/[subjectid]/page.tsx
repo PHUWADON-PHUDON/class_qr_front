@@ -197,10 +197,14 @@ export default function Studentcheck() {
             <div className="fixed top-[0] flex justify-between w-[100%] p-[20px_50px_0_0] bg-[#000]">
                 <p className="text-[20px] font-bold">ระบบเช็คชื่อ นักเรียนชั้น ม.{handlelavel.lavel}/{handlelavel.sublavel} วิชา {handlesubjectname.subjectname}</p>
                 <div className="flex gap-[10px]">
-                    {issave ? 
-                        <div onClick={() => save()} className="bg-white p-[2px_1rem] rounded-2xl text-[#000] cursor-pointer w-[65px]">
-                            <p className="text-center">บันทึก</p>
-                        </div>
+                    {iscansave ? 
+                        (issave ?  
+                            <div onClick={() => save()} className="bg-white p-[2px_1rem] rounded-2xl text-[#000] cursor-pointer w-[65px]">
+                                <p className="text-center">บันทึก</p>
+                            </div>
+                            :
+                            ""
+                        )
                         :
                         ""
                     }

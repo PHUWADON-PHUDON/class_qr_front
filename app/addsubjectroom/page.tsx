@@ -59,7 +59,9 @@ export default function Addsubjectroom() {
                 }
             }
         }
-        catch(err) {}
+        catch(err) {
+            console.error(err);
+        }
     }
 
     //!
@@ -82,7 +84,7 @@ export default function Addsubjectroom() {
                 <p>เพิ่มวิชา</p>
                 <input onChange={(e) => setgetsubject(e.target.value)} className="bg-white rounded-2xl h-[30px] pl-[10px] text-[#000] focus:outline-none" type="text" />
                 <p>ชั้น ม.</p>
-                <select onChange={(e:any) => setgetlavel(parseInt(e.target.value))} className="bg-[#000]">
+                <select onChange={(e) => setgetlavel(parseInt(e.target.value))} className="bg-[#000]">
                     <option value={0}>เลือก</option>
                     {handlelavel.map((e,i) => (
                         <option key={i} value={e.id}>{e.lavel}/{e.sublavel}</option>

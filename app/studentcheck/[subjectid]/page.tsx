@@ -1,9 +1,11 @@
 "use client";
-import { useState,useEffect,useRef } from "react";
+import { useState,useEffect } from "react";
 import { useParams } from "next/navigation";
+import { saveAs } from "file-saver";
 import axios from "axios";
 import moment from "moment";
 import Camera from "@/components/Camera";
+import VersionDisplay from "@/components/VersionDisplay";
 
 interface studentType {
     id:number;
@@ -46,7 +48,7 @@ export default function Studentcheck() {
     const [handlesubjectname,sethandlesubjectname] = useState<subjectType>({id:0,subjectname:"",lavel_id:0,lavel:{id:0,lavel:0,sublavel:0}});
     const [handlelavel,sethandlelavel] = useState<lavelType>({id:0,lavel:0,sublavel:0});
     const [handlestudent,sethandlestudent] = useState<studentType[]>([]);
-    const [datenow,setdatenow] = useState<any>();
+    const [datenow,setdatenow] = useState<string>();
     const [studentcheck,setstudentcheck] = useState<studentCheckType[]>([]);
     const [handlecheckstatus,sethandlecheckstatus] = useState<checkStatusType[]>([]);
     const [isopencamera,setisopencamera] = useState<boolean>(false);
@@ -192,11 +194,42 @@ export default function Studentcheck() {
 
     //!
 
+    //!export excel
+
+    const handleExportExcel = async () => {
+        try{
+            const res = await axios.get(url + "/report/getreport/" + param.subjectid, {responseType: 'blob'});
+            if (res.status === 200) {
+                const url = window.URL.createObjectURL(
+                    new Blob([res.data], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    })
+                )
+
+                const rename = handlesubjectname.subjectname.split(" ").join("");
+                const a = document.createElement('a')
+                a.href = url
+                a.download = `${rename}_${moment().format("DD-MM-YYYY")}.xlsx`
+                a.click()
+
+                window.URL.revokeObjectURL(url)
+            }
+        }
+        catch(err) {
+            console.error(err);
+        }
+    }
+
+    //!
+
     return(
         <div>
-            <div className="fixed top-[0] flex justify-between w-[100%] p-[20px_50px_0_0] bg-[#000]">
+            <div className="fixed top-[0] flex justify-between w-[100%] p-[20px_50px_10px_0] bg-[#000]">
                 <p className="text-[20px] font-bold">ระบบเช็คชื่อ นักเรียนชั้น ม.{handlelavel.lavel}/{handlelavel.sublavel} วิชา {handlesubjectname.subjectname}</p>
                 <div className="flex gap-[10px]">
+                    <div onClick={() => handleExportExcel()} className="bg-white p-[2px_1rem] rounded-2xl text-[#000] cursor-pointer w-[150px]">
+                        <p className="text-center">บันทึกเป็น excel</p>
+                    </div>
                     {iscansave ? 
                         (issave ?  
                             <div onClick={() => save()} className="bg-white p-[2px_1rem] rounded-2xl text-[#000] cursor-pointer w-[65px]">
@@ -218,7 +251,7 @@ export default function Studentcheck() {
                 :
                 ""
             }
-            <div className="mt-[20px] grid grid-cols-2 pt-[25px]">
+            <div className="mt-[20px] grid grid-cols-2 pt-[25px">
                 <div className="pt-[25px]">
                     <div className="grid grid-cols-4 text-center">
                         <p>ลำดับ</p>
@@ -237,9 +270,9 @@ export default function Studentcheck() {
                         ))}
                     </div>
                 </div>
-                <div className="flex overflow-x-scroll pt-[25px]">
+                <div className="flex overflow-x-scroll pt-[25px] overflow-hidden">
                     {handlehistory.map((e:any,i:number) => (
-                        <div key={i} className="w-[100px] text-center ml-[10px] border border-gray-700 relative">
+                        <div key={i} className="w-[100px] text-center ml-[10px] border border-gray-700">
                             <p className="absolute top-[-25px] left-[50%] translate-x-[-50%] text-[15px]">{e.checkamount}/{e.records.length}</p>
                             <div>
                                 <p>{e.date}</p>
@@ -275,6 +308,7 @@ export default function Studentcheck() {
                     }
                 </div>
             </div>
+            <VersionDisplay/>
         </div>
     );
 }

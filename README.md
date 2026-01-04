@@ -1,4 +1,8 @@
 Version
+1.0.3
+  - update camera button
+
+Version
 1.0.2
   - add feature export to excel
   - fix bug when add new students
